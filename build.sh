@@ -4,7 +4,7 @@ set -x
 
 function setup {
 	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
-	tar -xvf rootfs.tar.gz
+	tar -xf rootfs.tar.gz
 }
 
 function build_debian_chroot {
@@ -165,11 +165,11 @@ EOF
 
 sudo chown -R $USER:$USER *
 
-for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount $a; done
+for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount -l $a; done
 sudo rm -rf rootfs/proc/*
 
 
-sudo tar -zcvf server-rootfs.tar.gz rootfs
+sudo tar -zcf server-rootfs.tar.gz rootfs
 
 }
 
