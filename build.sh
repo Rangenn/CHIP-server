@@ -168,9 +168,12 @@ EOF
 
 sudo rm -rf rootfs/proc/*
 
-sudo tar -zcvf server-rootfs.tar.gz rootfs
 
 }
 
 setup
 build_debian_chroot || exit $?
+
+sudo chown -R $USER:$USER *
+
+sudo tar -zcvf server-rootfs.tar.gz rootfs
