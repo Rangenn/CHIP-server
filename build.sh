@@ -162,6 +162,8 @@ rm /bin/sh
 ln -s /bin/bash /bin/sh
 EOF
 
+sudo rm -rf rootfs/proc/*
+
 sudo tar -zcvf server-rootfs.tar.gz rootfs
 
 }
