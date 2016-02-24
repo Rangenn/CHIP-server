@@ -3,7 +3,7 @@
 set -x
 
 function setup {
-	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
+#	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
 	tar -xvf rootfs.tar.gz
 }
 
@@ -161,19 +161,19 @@ ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target
 rm /bin/sh
 ln -s /bin/bash /bin/sh
 
-umount /proc
-umount /sys
-
 EOF
 
+sudo chown -R $USER:$USER *
+
+for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount $a; done
 sudo rm -rf rootfs/proc/*
 
 
+sudo tar -zcvf server-rootfs.tar.gz rootfs
+
 }
+
 
 setup
 build_debian_chroot || exit $?
 
-sudo chown -R $USER:$USER *
-
-sudo tar -zcvf server-rootfs.tar.gz rootfs
