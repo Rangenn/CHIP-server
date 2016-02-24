@@ -167,7 +167,9 @@ sudo chown -R $USER:$USER *
 
 for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount -l $a; done
 sudo rm -rf rootfs/proc/*
-
+sudo rm -rf rootfs/dev/*
+sudo rm -rf rootfs/run/*
+sudo rm -rf rootfs/sys/*
 
 sudo tar -zcf server-rootfs.tar.gz rootfs
 
