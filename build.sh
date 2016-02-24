@@ -59,7 +59,9 @@ apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo host
                    lshw stress i2c-tools \
                    flash-kernel \
                    alsa-utils htop \
-                   binutils bzip2 ntp mlocate
+                   binutils bzip2 ntp mlocate \
+                   bc gawk mtd-utils openssl ca-certificates \
+                   chip-power chip-hwtest
 
 chmod u+s `which ping`
 
