@@ -3,7 +3,7 @@
 set -x
 
 function setup {
-#	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
+	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
 	tar -xvf rootfs.tar.gz
 }
 
