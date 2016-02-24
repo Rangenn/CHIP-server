@@ -162,6 +162,8 @@ rm /bin/sh
 ln -s /bin/bash /bin/sh
 EOF
 
+for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount $a; done
+
 sudo rm -rf rootfs/proc/*
 
 sudo tar -zcvf server-rootfs.tar.gz rootfs
