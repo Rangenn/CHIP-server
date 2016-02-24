@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 function setup {
 	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
 	tar -xvf rootfs.tar.gz
@@ -160,7 +162,9 @@ rm /bin/sh
 ln -s /bin/bash /bin/sh
 EOF
 
+sudo tar -zcvf server-rootfs.tar.gz rootfs
+
 }
 
-setup || exit $?
+setup
 build_debian_chroot || exit $?
