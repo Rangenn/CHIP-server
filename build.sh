@@ -160,9 +160,11 @@ ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target
 # quick and dirty solution since hwtest doesn't like dash:
 rm /bin/sh
 ln -s /bin/bash /bin/sh
-EOF
 
-for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount $a; done
+umount /proc
+umount /sys
+
+EOF
 
 sudo rm -rf rootfs/proc/*
 
