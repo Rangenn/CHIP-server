@@ -1,0 +1,166 @@
+#!/bin/bash
+
+function setup {
+	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
+	tar -xvf rootfs.tar.gz
+}
+
+function build_debian_chroot {
+  export LANG=C
+
+        sudo cp /usr/bin/qemu-arm-static rootfs/usr/bin/
+        sudo cp /etc/resolv.conf rootfs/etc/
+
+        sudo touch rootfs/usr/sbin/policy-rc.d
+        sudo chmod a+w rootfs/usr/sbin/policy-rc.d
+       echo >rootfs/usr/sbin/policy-rc.d <<EOF
+echo "************************************" >&2
+echo "All rc.d operations denied by policy" >&2
+echo "************************************" >&2
+exit 101
+EOF
+  sudo chmod 0755 rootfs/usr/sbin/policy-rc.d
+
+  # mount proc, sys and dev
+  sudo mount -t proc     chproc  rootfs/proc
+  sudo mount -t sysfs    chsys   rootfs/sys
+#  sudo mount -t devtmpfs chdev   rootfs/dev || mount --bind /dev rootfs/dev
+#  sudo mount -t devpts   chpts   rootfs/dev/pts
+
+        sudo chroot rootfs /bin/bash <<EOF
+echo -e "chip\nchip\n" | passwd
+echo "chip" >/etc/hostname
+echo -e "127.0.0.1\tchip" >/tmp/hosts.tmp
+cp /etc/hosts /tmp/hosts.bak
+cat /tmp/hosts.tmp /tmp/hosts.bak >/etc/hosts
+
+echo -e "\
+deb http://ftp.us.debian.org/debian/ jessie main contrib non-free\n\
+deb-src http://ftp.us.debian.org/debian/ jessie main contrib non-free\n\
+\n\
+deb http://security.debian.org/ jessie/updates main contrib non-free\n\
+deb-src http://security.debian.org/ jessie/updates main contrib non-free\n\
+\n\
+deb http://http.debian.net/debian jessie-backports main contrib non-free\n\
+deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
+\n\
+deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
+" >/etc/apt/sources.list
+
+wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
+
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update
+apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+                   lshw stress i2c-tools \
+                   flash-kernel \
+                   alsa-utils htop \
+                   binutils bzip2 ntp mlocate
+
+chmod u+s `which ping`
+
+#this is needs to be done after flash-kernel and before a kernel.deb is installed
+echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
+
+apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.3.0
+
+
+#THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
+echo -e "\
+state.sun4icodec {
+        control.1 {
+                iface MIXER
+                name 'Power Amplifier Volume'
+                value 56
+                comment {
+                        access 'read write'
+                        type INTEGER
+                        count 1
+                        range '0 - 63'
+                        dbmin -9999999
+                        dbmax 0
+                        dbvalue.0 -700
+                }
+        }
+        control.2 {
+                iface MIXER
+                name 'Left Mixer Left DAC Playback Switch'
+                value false
+                comment {
+                        access 'read write'
+                        type BOOLEAN
+                        count 1
+                }
+        }
+        control.3 {
+                iface MIXER
+                name 'Right Mixer Right DAC Playback Switch'
+                value false
+                comment {
+                        access 'read write'
+                        type BOOLEAN
+                        count 1
+                }
+        }
+        control.4 {
+                iface MIXER
+                name 'Right Mixer Left DAC Playback Switch'
+                value false
+                comment {
+                        access 'read write'
+                        type BOOLEAN
+                        count 1
+                }
+        }
+        control.5 {
+                iface MIXER
+                name 'Power Amplifier DAC Playback Switch'
+                value true
+                comment {
+                        access 'read write'
+                        type BOOLEAN
+                        count 1
+                }
+        }
+        control.6 {
+                iface MIXER
+                name 'Power Amplifier Mixer Playback Switch'
+                value false
+                comment {
+                        access 'read write'
+                        type BOOLEAN
+                        count 1
+                }
+        }
+        control.7 {
+                iface MIXER
+                name 'Power Amplifier Mute Switch'
+                value true
+                comment {
+                        access 'read write'
+                        type BOOLEAN
+                        count 1
+                }
+        }
+}
+" >/var/lib/alsa/asound.state
+
+alsactl restore
+
+sed -s -i 's/#EXTRA_GROUPS="/EXTRA_GROUPS="netdev dip adm lp /' /etc/adduser.conf
+sed -s -i 's/#ADD_EXTRA_GROUPS=/ADD_EXTRA_GROUPS=/' /etc/adduser.conf
+
+# Load g_serial driver and enable getty on it
+echo -e "\n# Virtual USB serial gadget\nttyGS0\n\n" >>/etc/securetty
+ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants$
+
+# quick and dirty solution since hwtest doesn't like dash:
+rm /bin/sh
+ln -s /bin/bash /bin/sh
+EOF
+
+}
+
+setup || exit $?
+build_debian_chroot || exit $?
