@@ -158,7 +158,7 @@ sed -s -i 's/#ADD_EXTRA_GROUPS=/ADD_EXTRA_GROUPS=/' /etc/adduser.conf
 
 # Load g_serial driver and enable getty on it
 echo -e "\n# Virtual USB serial gadget\nttyGS0\n\n" >>/etc/securetty
-ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants$
+ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants/serial-getty@ttyGS0.service
 
 # quick and dirty solution since hwtest doesn't like dash:
 rm /bin/sh
