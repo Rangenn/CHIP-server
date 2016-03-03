@@ -166,7 +166,7 @@ ln -s /bin/bash /bin/sh
 
 EOF
 
-sudo chown -R $USER:$USER *
+#sudo chown -R $USER:$USER *
 
 for a in $(mount |grep $PWD|awk '{print $3}'); do sudo umount -l $a; done
 sudo rm -rf rootfs/proc/*
