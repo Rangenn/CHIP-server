@@ -48,6 +48,8 @@ deb http://http.debian.net/debian jessie-backports main contrib non-free\n\
 deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
 \n\
 deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
+\n\
+deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
 " >/etc/apt/sources.list
 
 wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
@@ -61,14 +63,15 @@ apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo host
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
                    bc gawk mtd-utils openssl ca-certificates \
-                   chip-power chip-hwtest
+                   chip-power chip-hwtest curl
 
 chmod u+s `which ping`
 
 #this is needs to be done after flash-kernel and before a kernel.deb is installed
 echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
-apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.3.0
+apt-get -y --force-yes install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
+ rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
