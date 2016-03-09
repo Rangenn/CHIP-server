@@ -57,7 +57,7 @@ wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+apt-get -y --force-yes install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
                    flash-kernel \
                    alsa-utils htop \
