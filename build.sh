@@ -71,7 +71,7 @@ chmod u+s `which ping`
 echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 apt-get -y --force-yes install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
- rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4
+ rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4 chip-mali-modules
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
