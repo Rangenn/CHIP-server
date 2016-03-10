@@ -65,10 +65,9 @@ wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-FORCE=""
 
 if [[ "$BRANCH" == "chip/next" ]]; then
-	$FORCE="--force-yes"
+	FORCE=$(echo "--force-yes")
 fi
 
 apt-get -y $FORCE install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
