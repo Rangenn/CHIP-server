@@ -70,6 +70,8 @@ if [[ "$BRANCH" == "chip/next" ]]; then
 	FORCE=$(echo "--force-yes")
 fi
 
+echo $FORCE
+
 apt-get -y $FORCE install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
                    flash-kernel \
