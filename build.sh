@@ -37,7 +37,7 @@ set -x
 
 echo -e "chip\nchip\n" | passwd
 echo "chip" >/etc/hostname
-echo -e "127.0.0.1\tchip" >/tmp/hosts.tmp
+1echo -e "127.0.0.1\tchip" >/tmp/hosts.tmp
 cp /etc/hosts /tmp/hosts.bak
 cat /tmp/hosts.tmp /tmp/hosts.bak >/etc/hosts
 
@@ -70,15 +70,16 @@ if [[ "$BRANCH" == "chip/next" ]]; then
 export FORCE=$(echo "--force-yes")
 fi
 
-echo $FORCE
+echo "$FORCE"
 
-apt-get -y $FORCE install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+apt-get -y "$FORCE" install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
                    bc gawk mtd-utils openssl ca-certificates \
-                   chip-power chip-hwtest curl
+                   chip-power chip-hwtest curl\
+|| exit 1
 
 chmod u+s `which ping`
 
@@ -87,7 +88,7 @@ echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 
 if [[ "$BRANCH" == "chip/next" ]]; then
-apt-get -y $FORCE install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
+apt-get -y "$FORCE" install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
  rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4\
  chip-mali-modules xserver-xorg-video-armsoc
 else
