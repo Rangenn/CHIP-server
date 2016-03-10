@@ -1,5 +1,7 @@
 #!/bin/bash
 
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
 set -x
 
 function setup {
@@ -48,16 +50,25 @@ deb http://http.debian.net/debian jessie-backports main contrib non-free\n\
 deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
 \n\
 deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
-\n\
-deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
 " >/etc/apt/sources.list
+
+if [[ "$BRANCH" == "chip/next" ]]; then
+	echo -e "\n\
+deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
+" >> /etc/apt/sources.list
+fi
 
 wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
 
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-apt-get -y --force-yes install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+
+if [[ "$BRANCH" == "chip/next" ]]; then
+	FORCE="--force-yes"
+fi
+
+apt-get -y $FORCE install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
                    flash-kernel \
                    alsa-utils htop \
@@ -70,8 +81,16 @@ chmod u+s `which ping`
 #this is needs to be done after flash-kernel and before a kernel.deb is installed
 echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
-apt-get -y --force-yes install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
- rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4 chip-mali-modules xserver-xorg-video-armsoc
+
+if [[ "$BRANCH" == "chip/next" ]]; then
+apt-get -y $FORCE install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
+ rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4\
+ chip-mali-modules xserver-xorg-video-armsoc
+else
+apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt\
+ linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common\
+  rtl8723bs-mp-driver-modules-4.3.0
+fi
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
