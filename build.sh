@@ -67,7 +67,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 
 if [[ "$BRANCH" == "chip/next" ]]; then
-	FORCE=$(echo "--force-yes")
+export FORCE=$(echo "--force-yes")
 fi
 
 echo $FORCE
