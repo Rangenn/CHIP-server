@@ -5,7 +5,7 @@ set -x
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 function setup {
-	rm -rf rootfs*
+	sudo rm -rf rootfs*
 	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
 	sudo tar -xf rootfs.tar.gz
 }
