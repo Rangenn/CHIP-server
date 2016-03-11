@@ -66,13 +66,13 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 
-if [[ "$BRANCH" == "chip/next" ]]; then
-export FORCE=$(echo "--force-yes")
-fi
+#if [[ "$BRANCH" == "chip/next" ]]; then
+#export FORCE=$(echo "--force-yes")
+#fi
 
-echo "$FORCE"
+#echo "$FORCE"
 
-apt-get -y "$FORCE" install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
                    flash-kernel \
                    alsa-utils htop \
@@ -88,7 +88,7 @@ echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 
 if [[ "$BRANCH" == "chip/next" ]]; then
-apt-get -y "$FORCE" install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
+apt-get -y --allow-unauthenticated install linux-image-4.4.4 rtl8723bs-bt linux-firmware-image-4.4.4\
  rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.4\
  chip-mali-modules xserver-xorg-video-armsoc
 else
