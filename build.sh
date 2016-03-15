@@ -78,7 +78,7 @@ apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate 
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
                    bc gawk mtd-utils openssl ca-certificates \
-                   chip-power chip-hwtest curl\
+                   chip-power chip-hwtest curl chip-dt-overlays\
 || exit 1
 
 chmod u+s `which ping`
