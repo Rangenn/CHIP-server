@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -ex
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
