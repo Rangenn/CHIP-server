@@ -74,6 +74,7 @@ apt-get update
 
 apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
+                   avahi-daemon cu\
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
