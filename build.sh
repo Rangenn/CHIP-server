@@ -164,6 +164,8 @@ ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target
 rm /bin/sh
 ln -s /bin/bash /bin/sh
 
+echo "SERVER" > /etc/os-variant
+
 EOF
 
 #sudo chown -R $USER:$USER *
