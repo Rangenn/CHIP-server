@@ -31,6 +31,8 @@ EOF
 #  sudo mount -t devpts   chpts   rootfs/dev/pts
 
         sudo chroot rootfs /bin/bash <<EOF
+set -x
+
 echo -e "chip\nchip\n" | passwd
 echo "chip" >/etc/hostname
 echo -e "127.0.0.1\tchip" >/tmp/hosts.tmp
