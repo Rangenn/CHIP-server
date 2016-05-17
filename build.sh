@@ -37,7 +37,7 @@ set -x
 
 echo -e "chip\nchip\n" | passwd
 echo "chip" >/etc/hostname
-1echo -e "127.0.0.1\tchip" >/tmp/hosts.tmp
+echo -e "127.0.0.1\tchip" >/tmp/hosts.tmp
 cp /etc/hosts /tmp/hosts.bak
 cat /tmp/hosts.tmp /tmp/hosts.bak >/etc/hosts
 
