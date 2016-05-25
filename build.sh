@@ -1,9 +1,11 @@
 #!/bin/bash
 
-set -x
+set -ex
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 function setup {
-	rm -rf rootfs*
+	sudo rm -rf rootfs*
 	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
 	sudo tar -xf rootfs.tar.gz
 }
@@ -52,25 +54,65 @@ deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
 deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
 " >/etc/apt/sources.list
 
+if [[ "$BRANCH" == "chip/next" ]]; then
+	echo -e "\n\
+deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
+" >> /etc/apt/sources.list
+fi
+
 wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
 
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+
+#if [[ "$BRANCH" == "chip/next" ]]; then
+#export FORCE=$(echo "--force-yes")
+#fi
+
+#echo "$FORCE"
+
+if [[ "$BRANCH" == "chip/next" ]]; then
+
+apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
+                   avahi-daemon cu\
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
                    bc gawk mtd-utils openssl ca-certificates \
-                   chip-power chip-hwtest
+                   chip-power chip-hwtest curl chip-dt-overlays\
+|| exit 1
+
+else
+
+apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+                   lshw stress i2c-tools \
+                   avahi-daemon cu\
+                   flash-kernel \
+                   alsa-utils htop \
+                   binutils bzip2 ntp mlocate \
+                   bc gawk mtd-utils openssl ca-certificates \
+                   chip-power chip-hwtest curl\
+|| exit 1
+
+fi
 
 chmod u+s `which ping`
 
 #this is needs to be done after flash-kernel and before a kernel.deb is installed
 echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
-apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.3.0
+
+if [[ "$BRANCH" == "chip/next" ]]; then
+apt-get -y --allow-unauthenticated install linux-image-4.4.6 rtl8723bs-bt linux-firmware-image-4.4.6\
+ rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.6\
+ chip-mali-modules xserver-xorg-video-armsoc
+else
+apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt\
+ linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common\
+  rtl8723bs-mp-driver-modules-4.3.0
+fi
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
@@ -166,7 +208,12 @@ ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target
 rm /bin/sh
 ln -s /bin/bash /bin/sh
 
-echo "SERVER" > /etc/os-variant
+if [[ "$BRANCH" == "chip/next" ]]; then
+  echo "SERVER-NEXT" > /etc/os-variant
+else
+  echo "SERVER" > /etc/os-variant
+fi
+
 
 EOF
 
