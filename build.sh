@@ -192,7 +192,12 @@ ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target
 rm /bin/sh
 ln -s /bin/bash /bin/sh
 
-echo "SERVER-NEXT" > /etc/os-variant
+if [[ "$BRANCH" == "chip/next" ]]; then
+  echo "SERVER-NEXT" > /etc/os-variant
+else
+  echo "SERVER" > /etc/os-variant
+fi
+
 
 EOF
 
