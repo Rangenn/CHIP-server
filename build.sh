@@ -109,9 +109,26 @@ apt-get -y --allow-unauthenticated install linux-image-4.4.6 rtl8723bs-bt linux-
  rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.6\
  chip-mali-modules xserver-xorg-video-armsoc
 else
-apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt\
- linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common\
-  rtl8723bs-mp-driver-modules-4.3.0
+  apt-get -y install xserver-xorg-video-armsoc rtl8723bs-bt
+
+  KERNS=$(curl http://opensource.nextthing.co/testing-kernels/4.4/debian-4.4-latest)
+
+  echo ${KERNS}
+  S3_DIR="http://opensource.nextthing.co/testing-kernels/4.4"
+
+  for PICK in $KERNS
+  do
+    DOWNLOAD="${S3_DIR}/${PICK}"
+    wget $DOWNLOAD
+  done
+
+  rm chip-mali*
+  
+  dpkg -i *.deb
+  
+#apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt\
+# linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common\
+#  rtl8723bs-mp-driver-modules-4.3.0
 fi
 
 
