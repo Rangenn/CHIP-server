@@ -111,20 +111,11 @@ apt-get -y --allow-unauthenticated install linux-image-4.4.6 rtl8723bs-bt linux-
 else
   apt-get -y install rtl8723bs-bt
 
-  KERNS="$(curl http://opensource.nextthing.co/testing-kernels/4.4/debian-4.4-latest)"
-
-  echo ${KERNS}
-  S3_DIR="http://opensource.nextthing.co/testing-kernels/4.4"
-
-  for PICK in $KERNS
-  do
-    DOWNLOAD="${S3_DIR}/${PICK}"
-    wget $DOWNLOAD
-  done
+  wget http://opensource.nextthing.co/testing-kernels/4.4/rtl8723bs-mp-driver-modules-4.4.11-ntc_4.3.16-13854.20150410-BTCOEX20150119-5844-ntc-2+4.4.11-9_all.deb
+  wget http://opensource.nextthing.co/testing-kernels/4.4/rtl8723bs-mp-driver-common_4.3.16-13854.20150410-BTCOEX20150119-5844-ntc-2_all.deb
+  wget http://opensource.nextthing.co/testing-kernels/4.4/linux-image-4.4.11-ntc_4.4.11-9_armhf.deb
   wget https://s3-us-west-2.amazonaws.com/opensource.nextthing.co/chip/debian/testing-repo/pool/main/x/xf86-video-armsoc/xserver-xorg-video-armsoc_1.4-1_armhf.deb
 
-  rm chip-mali*
-  
   dpkg -i *.deb
   apt-get -f -y install
   apt-get -y install --fix-missing
