@@ -126,6 +126,8 @@ else
   rm chip-mali*
   
   dpkg -i *.deb
+  apt-get -f -y install
+  apt-get -y install --fix-missing
   
 #apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt\
 # linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common\
