@@ -93,7 +93,7 @@ apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo host
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
                    bc gawk mtd-utils openssl ca-certificates \
-                   chip-power chip-hwtest curl\
+                   chip-power chip-hwtest curl chip-dt-overlays\
 || exit 1
 
 fi
@@ -109,22 +109,9 @@ apt-get -y --allow-unauthenticated install linux-image-4.4.6 rtl8723bs-bt linux-
  rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.6\
  chip-mali-modules xserver-xorg-video-armsoc
 else
-  apt-get -y install rtl8723bs-bt
-
-  wget https://s3-us-west-2.amazonaws.com/opensource.nextthing.co/chip/debian/testing-repo/pool/main/c/chip-dt-overlays/chip-dt-overlays_0.1_armhf.deb
-  wget https://s3-us-west-2.amazonaws.com/opensource.nextthing.co/chip/debian/testing-repo/pool/main/c/chip-configs/chip-configs_0.25_all.deb
-  wget http://opensource.nextthing.co/testing-kernels/4.4/rtl8723bs-mp-driver-modules-4.4.11-ntc_4.3.16-13854.20150410-BTCOEX20150119-5844-ntc-2+4.4.11-9_all.deb
-  wget http://opensource.nextthing.co/testing-kernels/4.4/rtl8723bs-mp-driver-common_4.3.16-13854.20150410-BTCOEX20150119-5844-ntc-2_all.deb
-  wget http://opensource.nextthing.co/testing-kernels/4.4/linux-image-4.4.11-ntc_4.4.11-9_armhf.deb
-  wget https://s3-us-west-2.amazonaws.com/opensource.nextthing.co/chip/debian/testing-repo/pool/main/x/xf86-video-armsoc/xserver-xorg-video-armsoc_1.4-1_armhf.deb
-
-  dpkg -i *.deb
-  apt-get -f -y install
-  apt-get -y install --fix-missing
-  
-#apt-get -y install linux-image-4.3.0=4.3.0-ntc-4 rtl8723bs-bt\
-# linux-firmware-image-4.3.0 rtl8723bs-mp-driver-common\
-#  rtl8723bs-mp-driver-modules-4.3.0
+apt-get -y install linux-image-4.4.11=4.4.11-ntc-9 rtl8723bs-bt\
+  rtl8723bs-mp-driver-common\
+  rtl8723bs-mp-driver-modules-4.4.11 xserver-xorg-video-armsoc
 fi
 
 
