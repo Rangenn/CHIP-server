@@ -105,8 +105,8 @@ echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 
 if [[ "$BRANCH" == "chip/next" ]]; then
-apt-get -y --allow-unauthenticated install linux-image-4.4.6 rtl8723bs-bt linux-firmware-image-4.4.6\
- rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.6\
+apt-get -y --allow-unauthenticated install linux-image-4.4.11 rtl8723bs-bt linux-firmware-image-4.4.11\
+ rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.11\
  chip-mali-modules
 else
 apt-get -y install linux-image-4.4.11 rtl8723bs-bt\
