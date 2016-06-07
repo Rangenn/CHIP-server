@@ -130,7 +130,6 @@ pushd /tmp/localrepo
 reprepro -b . includedeb localdeb /var/cache/apt/archives/*.deb
 apt-get -y purge reprepro gnupg
 apt-get clean
-apt-get -y autoremove
 
 sed -s -i 's%deb file:///tmp/localrepo/ localdeb main%%' /etc/apt/sources.list
 rm /etc/apt/preferences
