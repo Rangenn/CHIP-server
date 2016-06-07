@@ -52,7 +52,34 @@ deb http://http.debian.net/debian jessie-backports main contrib non-free\n\
 deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
 \n\
 deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
+\n\
+deb file:///tmp/localrepo/ localdeb main\n\
 " >/etc/apt/sources.list
+
+echo -e "\
+Package: *\n\
+Pin: origin debian.org debian.net nextthing.co\n\
+Pin-Priority: 700\n\
+\n\
+Package: *\n\
+Pin: origin /tmp/localrepo\n\
+Pin-Priority: 800\n\
+\n\
+" >/etc/apt/preferences
+
+pushd /tmp
+wget http://opensource.nextthing.co/chip/debian/repo-cache/localrepo-chip-serv-next.tar.gz
+tar xf localrepo*
+rm *.gz
+
+apt-get update
+apt-get install -y --allow-unauthenticated gnupg
+apt-key add localrepo/the.gpg.key
+
+gpg --import localrepo/public.key
+gpg --import --allow-secret-key-import localrepo/private.key
+popd
+
 
 if [[ "$BRANCH" == "chip/next" ]]; then
 	echo -e "\n\
@@ -97,6 +124,26 @@ apt-get -y install linux-image-4.4.11 rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
   rtl8723bs-mp-driver-modules-4.4.11
 fi
+
+apt-get -y install reprepro
+pushd /tmp/localrepo
+reprepro -b . includedeb localdeb /var/cache/apt/archives/*.deb
+apt-get -y purge reprepro gnupg
+apt-get clean
+apt-get -y autoremove
+
+sed -s -i 's%deb file:///tmp/localrepo/ localdeb main%%' /etc/apt/sources.list
+rm /etc/apt/preferences
+
+pushd /tmp
+tar -czf localrepo-chip-serv-next.tar.gz localrepo
+
+apt-key del $(cat localrepo/gpgid)
+
+rm -rf localrepo /root/.gnupg
+
+apt-get update
+popd
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
@@ -200,6 +247,9 @@ fi
 
 
 EOF
+
+cp rootfs/tmp/*.tar.gz .
+rm -rf rootfs/tmp/*
 
 #sudo chown -R $USER:$USER *
 
