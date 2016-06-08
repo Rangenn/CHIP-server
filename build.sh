@@ -89,7 +89,7 @@ cp /etc/apt/trusted.gpg /etc/apt/bak.trusted.gpg
 apt-key add localrepo/the.gpg.key
 
 mkdir -p /var/cache/apt/archives
-cp `find . -name '*.deb'` /var/cache/apt/archives/
+cp `find /tmp/localrepo -name '*.deb'` /var/cache/apt/archives/
 
 gpg --homedir /root/.gnupg --import localrepo/public.key
 gpg --homedir /root/.gnupg --allow-secret-key-import --import localrepo/private.key
@@ -113,7 +113,7 @@ apt-get update
 #echo "$FORCE"
 
 apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
-                   apt \
+                   avahi-autoipd \
                    lshw stress i2c-tools \
                    avahi-daemon cu\
                    flash-kernel \
