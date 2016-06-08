@@ -89,7 +89,8 @@ cp /etc/apt/trusted.gpg /etc/apt/bak.trusted.gpg
 apt-key add localrepo/the.gpg.key
 
 mkdir -p /var/cache/apt/archives
-cp `find /tmp/localrepo -name '*.deb'` /var/cache/apt/archives/
+find localrepo -name "*.deb" | xargs cp -t /var/cache/apt/archives/
+#cp '`find localrepo -name "*.deb"`' /var/cache/apt/archives/
 
 gpg --homedir /root/.gnupg --import localrepo/public.key
 gpg --homedir /root/.gnupg --allow-secret-key-import --import localrepo/private.key
