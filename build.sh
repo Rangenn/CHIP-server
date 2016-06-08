@@ -76,9 +76,10 @@ apt-get update
 apt-get install -y --allow-unauthenticated gnupg
 apt-key add localrepo/the.gpg.key
 
-cp -R localrepo/.gnupg /root/.gnupg
-#gpg --import localrepo/public.key
-#gpg --import --allow-secret-key-import localrepo/private.key
+#cp -R localrepo/.gnupg /root/.gnupg
+gpg --list-keys
+gpg --homedir /root/.gnupg --import localrepo/public.key
+gpg --homedir /root/.gnupg --allow-secret-key-import localrepo/private.key
 popd
 
 
