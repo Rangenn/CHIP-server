@@ -58,7 +58,19 @@ deb file:///tmp/localrepo/ localdeb main\n\
 
 echo -e "\
 Package: *\n\
-Pin: origin debian.org debian.net nextthing.co\n\
+Pin: origin ftp.us.debian.org\n\
+Pin-Priority: 700\n\
+\n\
+Package: *\n\
+Pin: origin security.debian.org\n\
+Pin-Priority: 700\n\
+\n\
+Package: *\n\
+Pin: origin http.debian.net\n\
+Pin-Priority: 700\n\
+\n\
+Package: *\n\
+Pin: origin opensource.nextthing.co\n\
 Pin-Priority: 700\n\
 \n\
 Package: *\n\
@@ -66,6 +78,9 @@ Pin: origin /tmp/localrepo\n\
 Pin-Priority: 800\n\
 \n\
 " >/etc/apt/preferences
+
+cat /etc/apt/sources.list
+cat /etc/apt/preferences
 
 pushd /tmp
 wget http://opensource.nextthing.co/chip/debian/repo-cache/localrepo-chip-serv-next.tar.gz
