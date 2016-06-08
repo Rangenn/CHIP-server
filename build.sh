@@ -83,9 +83,11 @@ wget http://opensource.nextthing.co/chip/debian/repo-cache/localrepo-chip-serv-n
 tar xf localrepo-chip-serv-next.tar.gz
 rm *.gz
 
+wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
+cp /etc/apt/trusted.gpg /etc/apt/bak.trusted.gpg
+
 apt-key add localrepo/the.gpg.key
 
-#cp -R localrepo/.gnupg /root/.gnupg
 gpg --homedir /root/.gnupg --import localrepo/public.key
 gpg --homedir /root/.gnupg --allow-secret-key-import --import localrepo/private.key
 popd
@@ -96,8 +98,6 @@ if [[ "$BRANCH" == "chip/next" ]]; then
 deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
 " >> /etc/apt/sources.list
 fi
-
-wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -148,9 +148,11 @@ rm /etc/apt/preferences
 pushd /tmp
 tar -czf localrepo-chip-serv-next.tar.gz localrepo
 
-apt-key del $(cat localrepo/gpgid)
+#apt-key del $(cat localrepo/gpgid)
 
 rm -rf localrepo /root/.gnupg
+
+mv /etc/apt/bak.trusted.gpg /etc/apt/trusted.gpg
 
 apt-get update
 popd
