@@ -110,6 +110,7 @@ apt-get update
 #echo "$FORCE"
 
 apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
+                   apt \
                    lshw stress i2c-tools \
                    avahi-daemon cu\
                    flash-kernel \
@@ -137,7 +138,7 @@ fi
 
 apt-get -y install reprepro
 pushd /tmp/localrepo
-reprepro -b . includedeb localdeb /var/cache/apt/archives/*.deb
+reprepro --gnupghome /root/.gnupg -b . includedeb localdeb /var/cache/apt/archives/*.deb
 apt-get -y purge reprepro gnupg
 apt-get clean
 
