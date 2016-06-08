@@ -72,12 +72,9 @@ wget http://opensource.nextthing.co/chip/debian/repo-cache/localrepo-chip-serv-n
 tar xf localrepo-chip-serv-next.tar.gz
 rm *.gz
 
-apt-get update
-apt-get install -y --allow-unauthenticated gnupg
 apt-key add localrepo/the.gpg.key
 
 #cp -R localrepo/.gnupg /root/.gnupg
-gpg --list-keys
 gpg --homedir /root/.gnupg --import localrepo/public.key
 gpg --homedir /root/.gnupg --allow-secret-key-import localrepo/private.key
 popd
