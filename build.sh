@@ -58,19 +58,15 @@ deb file:///tmp/localrepo/ localdeb main\n\
 
 echo -e "\
 Package: *\n\
-Pin: origin ftp.us.debian.org\n\
+Pin: release a=jessie\n\
 Pin-Priority: 700\n\
 \n\
 Package: *\n\
-Pin: origin security.debian.org\n\
+Pin: release a=jessie/updates\n\
 Pin-Priority: 700\n\
 \n\
 Package: *\n\
-Pin: origin http.debian.net\n\
-Pin-Priority: 700\n\
-\n\
-Package: *\n\
-Pin: origin opensource.nextthing.co\n\
+Pin: release a=jessie-backports\n\
 Pin-Priority: 700\n\
 \n\
 Package: *\n\
