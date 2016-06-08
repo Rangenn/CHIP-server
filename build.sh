@@ -52,56 +52,15 @@ deb http://http.debian.net/debian jessie-backports main contrib non-free\n\
 deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
 \n\
 deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
-\n\
-deb file:///tmp/localrepo/ localdeb main\n\
 " >/etc/apt/sources.list
-
-echo -e "\
-Package: *\n\
-Pin: release a=jessie\n\
-Pin-Priority: 700\n\
-\n\
-Package: *\n\
-Pin: release a=jessie/updates\n\
-Pin-Priority: 700\n\
-\n\
-Package: *\n\
-Pin: release a=jessie-backports\n\
-Pin-Priority: 700\n\
-\n\
-Package: *\n\
-Pin: origin /tmp/localrepo\n\
-Pin-Priority: 800\n\
-\n\
-" >/etc/apt/preferences
-
-cat /etc/apt/sources.list
-cat /etc/apt/preferences
-
-pushd /tmp
-wget http://opensource.nextthing.co/chip/debian/repo-cache/localrepo-chip-serv-next.tar.gz
-tar xf localrepo-chip-serv-next.tar.gz
-rm *.gz
-
-wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
-cp /etc/apt/trusted.gpg /etc/apt/bak.trusted.gpg
-
-apt-key add localrepo/the.gpg.key
-
-mkdir -p /var/cache/apt/archives
-find localrepo -name "*.deb" | xargs cp -t /var/cache/apt/archives/
-#cp '`find localrepo -name "*.deb"`' /var/cache/apt/archives/
-
-gpg --homedir /root/.gnupg --import localrepo/public.key
-gpg --homedir /root/.gnupg --allow-secret-key-import --import localrepo/private.key
-popd
-
 
 if [[ "$BRANCH" == "chip/next" ]]; then
 	echo -e "\n\
 deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
 " >> /etc/apt/sources.list
 fi
+
+wget -qO - http://opensource.nextthing.co/chip/debian/repo/archive.key | apt-key add -
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -139,27 +98,6 @@ apt-get -y install linux-image-4.4.11 rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
   rtl8723bs-mp-driver-modules-4.4.11
 fi
-
-apt-get -y install reprepro
-pushd /tmp/localrepo
-reprepro --gnupghome /root/.gnupg -b . includedeb localdeb /var/cache/apt/archives/*.deb
-apt-get -y purge reprepro gnupg
-apt-get clean
-
-sed -s -i 's%deb file:///tmp/localrepo/ localdeb main%%' /etc/apt/sources.list
-rm /etc/apt/preferences
-
-pushd /tmp
-tar -czf localrepo-chip-serv-next.tar.gz localrepo
-
-#apt-key del $(cat localrepo/gpgid)
-
-rm -rf localrepo /root/.gnupg
-
-mv /etc/apt/bak.trusted.gpg /etc/apt/trusted.gpg
-
-apt-get update
-popd
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
@@ -263,9 +201,6 @@ fi
 
 
 EOF
-
-cp rootfs/tmp/*.tar.gz .
-rm -rf rootfs/tmp/*
 
 #sudo chown -R $USER:$USER *
 
