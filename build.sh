@@ -64,12 +64,6 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 
-#if [[ "$BRANCH" == "next" ]]; then
-#export FORCE=$(echo "--force-yes")
-#fi
-
-#echo "$FORCE"
-
 if [[ "$BRANCH" == "next" ]]; then
 
 apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
@@ -102,15 +96,19 @@ chmod u+s `which ping`
 echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 KERNEL_VERSION_NUMBER="${KERNEL_VERSION_NUMBER:-4.4.11}"
+
 if [[ "$BRANCH" == "next" ]]; then
-apt-get -y --allow-unauthenticated install linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt linux-firmware-image-${KERNEL_VERSION_NUMBER}\
- rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}\
- chip-mali-modules
+	# get list of latest deb packages 
+	curl -o deb-packages http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/debian-4.4-nand-testing-latest
+	# download list and install
+	awk '{print "http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/" $0;}' deb-packages | xargs -L1 curl -O
+	awk '{print $0;}' deb-packages | xargs -L1 dpkg -i
 else
 apt-get -y install linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
   rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 fi
+apt-get -y --allow-unauthenticated install rtl8723bs-bt
 
 
 #THIS NEEDS TO BE DONE BEFORE THE PULSE PACKAGE IS INSTALLED
