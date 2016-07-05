@@ -101,8 +101,8 @@ if [[ "$BRANCH" == "next" ]]; then
 	# get list of latest deb packages 
 	curl -o deb-packages http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/debian-4.4-nand-testing-latest
 	# download list and install
-	awk '{print "http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/" $0;}' deb-packages | xargs -L1 curl -O
-	awk '{print $0;}' deb-packages | xargs -L1 dpkg -i
+	awk '{print "http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/" \$0;}' deb-packages | xargs -L1 curl -O
+	awk '{print \$0;}' deb-packages | xargs -L1 dpkg -i
 else
 apt-get -y install linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
