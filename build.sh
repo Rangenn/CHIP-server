@@ -103,6 +103,12 @@ if [[ "$BRANCH" == "next" ]]; then
 	# download list and install
 	awk '{print "http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/" \$0;}' deb-packages | xargs -L1 curl -O
 	awk '{print \$0;}' deb-packages | xargs -L1 dpkg -i
+	
+	# install mtd-utils-mlc and enable ubihealthd
+	wget http://opensource.nextthing.co/mtd-utils-mlc_1.5.2_armhf.deb
+	dpkg -r --force-depends mtd-utils
+	dpkg -i mtd-utils-mlc*.deb
+	systemctl enable ubihealthd
 else
 apt-get -y install linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
