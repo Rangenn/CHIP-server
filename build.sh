@@ -108,7 +108,7 @@ if [[ "$BRANCH" == "next" ]]; then
 	wget http://opensource.nextthing.co/mtd-utils-mlc_1.5.2_armhf.deb
 	dpkg -r --force-depends mtd-utils
 	dpkg -i mtd-utils-mlc*.deb
-	systemctl enable ubihealthd
+	#systemctl enable ubihealthd
 else
 apt-get -y install linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
