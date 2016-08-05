@@ -97,7 +97,7 @@ echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 KERNEL_VERSION_NUMBER="${KERNEL_VERSION_NUMBER:-4.4.11}"
 
-#if [[ "$BRANCH" == "next" ]]; then
+if [[ "$BRANCH" == "next" ]]; then
 #	# get list of latest deb packages 
 #	curl -o deb-packages http://opensource.nextthing.co.s3.amazonaws.com/testing-kernels/4.4-nand-testing/debian-4.4-nand-testing-latest
 #	# download list and install
@@ -109,11 +109,16 @@ KERNEL_VERSION_NUMBER="${KERNEL_VERSION_NUMBER:-4.4.11}"
 #	dpkg -r --force-depends mtd-utils
 #	dpkg -i mtd-utils-mlc*.deb
 #	#systemctl enable ubihealthd
-#else
-apt-get -y install linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
+apt-get -y install --allow-unauthenticated --force-yes\
+  linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
   rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
-#fi
+else
+apt-get -y install\
+  linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
+  rtl8723bs-mp-driver-common\
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
+fi
 #apt-get -y --allow-unauthenticated install rtl8723bs-bt
 
 
