@@ -68,7 +68,7 @@ if [[ "$BRANCH" == "next" ]]; then
 
 apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
-                   avahi-daemon cu\
+                   avahi-daemon cu avahi-autoipd \
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
@@ -80,7 +80,7 @@ else
 
 apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
-                   avahi-daemon cu\
+                   avahi-daemon cu avahi-autoipd \
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
