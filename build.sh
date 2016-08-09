@@ -84,11 +84,13 @@ apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo host
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
-                   bc gawk mtd-utils openssl ca-certificates \
+                   bc gawk mtd-utils-mlc openssl ca-certificates \
                    chip-power chip-hwtest curl chip-dt-overlays\
 || exit 1
 
 fi
+
+systemctl enable ubihealthd
 
 chmod u+s `which ping`
 
