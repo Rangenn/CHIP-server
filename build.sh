@@ -123,7 +123,7 @@ apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo host
 
 fi
 
-systemctl enable ubihealthd
+#systemctl enable ubihealthd
 
 chmod u+s `which ping`
 
