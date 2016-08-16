@@ -74,7 +74,40 @@ apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate 
                    binutils bzip2 ntp mlocate \
                    bc gawk mtd-utils-mlc openssl ca-certificates \
                    chip-power chip-hwtest curl chip-dt-overlays\
+		   git bonnie++\
 || exit 1
+
+echo -e "\
+[connection]\
+id="${TEST_SSID}"
+uuid="${TEST_UUID}"
+type=wifi
+
+[wifi]
+ssid="${TEST_SSID}"
+mode=infrastructure
+mac-address="${TEST_MAC}"
+
+[wifi-security]
+key-mgmt=wpa-psk
+auth-alg=open
+psk="${TEST_PSK}"
+\
+[ipv4]\
+method=auto\
+\
+[ipv6]\
+method=auto\
+" > /etc/NetworkManager/system-connections/${TEST_SSID}
+
+pushd /root
+git clone https://${HB_UN}:${HB_PW}github.com/nextthingco/CHIP-nandTests
+pushd CHIP-nandTests
+chmod +x *.sh
+cp bootstrap.service /etc/systemd/system/
+cp bootstrap.sh /usr/sbin/
+systemctl enable bootstrap
+popd
 
 else
 
