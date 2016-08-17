@@ -77,29 +77,6 @@ apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate 
 		   git bonnie++\
 || exit 1
 
-echo -e "\
-[connection]\n\
-id="${TEST_SSID}"\n\
-uuid="${TEST_UUID}"\n\
-type=wifi\n\
-\n\
-[wifi]\n\
-ssid="${TEST_SSID}"\n\
-mode=infrastructure\n\
-mac-address="${TEST_MAC}"\n\
-\n\
-[wifi-security]\n\
-key-mgmt=wpa-psk\n\
-auth-alg=open\n\
-psk="${TEST_PSK}"\n\
-\n\
-[ipv4]\n\
-method=auto\n\
-\n\
-[ipv6]\n\
-method=auto\n\
-" > /etc/NetworkManager/system-connections/${TEST_SSID}
-
 pushd /root
 git clone https://${HB_UN}:${HB_PW}@github.com/nextthingco/CHIP-nandTests
 pushd CHIP-nandTests
