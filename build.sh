@@ -90,6 +90,9 @@ echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
 
 if [[ "$BRANCH" == "chip/next" ]]; then
+apt-get -y --allow-unauthenticated install libegl1-mesa libgles1-mesa\
+ libgles2-mesa libwayland-egl1-mesa
+
 apt-get -y --allow-unauthenticated install linux-image-4.4.13 rtl8723bs-bt linux-firmware-image-4.4.13\
  rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.13\
  chip-mali-modules-4.4.13-ntc-testing chip-mali-userspace xserver-xorg-video-armsoc
