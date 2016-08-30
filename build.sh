@@ -82,7 +82,6 @@ git clone https://${HB_UN}:${HB_PW}@github.com/nextthingco/CHIP-nandTests
 pushd CHIP-nandTests
 chmod +x *.sh
 cp bootstrap.service /etc/systemd/system/
-cp bootstrap.sh /usr/sbin/
 systemctl enable bootstrap
 popd
 
