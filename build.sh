@@ -114,12 +114,12 @@ if [[ "$BRANCH" == "next" ]]; then
 apt-get -y install --allow-unauthenticated --force-yes\
   linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
-  rtl8723bs-mp-driver-modules
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 else
 apt-get -y install\
   linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
-  rtl8723bs-mp-driver-modules
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 fi
 #apt-get -y --allow-unauthenticated install rtl8723bs-bt
 
