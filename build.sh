@@ -206,7 +206,7 @@ state.sun4icodec {
 
 alsactl restore
 
-sed -s -i 's/#EXTRA_GROUPS="/EXTRA_GROUPS="netdev dip adm lp /' /etc/adduser.conf
+sed -s -i 's/#EXTRA_GROUPS="/EXTRA_GROUPS="netdev dip adm lp input/' /etc/adduser.conf
 sed -s -i 's/#ADD_EXTRA_GROUPS=/ADD_EXTRA_GROUPS=/' /etc/adduser.conf
 
 # Load g_serial driver and enable getty on it
