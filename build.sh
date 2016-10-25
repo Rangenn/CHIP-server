@@ -2,8 +2,6 @@
 
 set -ex
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
 function setup {
 	sudo rm -rf rootfs*
 	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
@@ -54,7 +52,7 @@ deb-src http://http.debian.net/debian jessie-backports main contrib non-free\n\
 deb http://opensource.nextthing.co/chip/debian/repo jessie main\n\
 " >/etc/apt/sources.list
 
-if [[ "$BRANCH" == "chip/next" ]]; then
+if [[ "$BRANCH" == "next" ]]; then
 	echo -e "\n\
 deb http://opensource.nextthing.co/chip/debian/testing-repo testing main\n\
 " >> /etc/apt/sources.list
@@ -66,21 +64,15 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 
-#if [[ "$BRANCH" == "chip/next" ]]; then
-#export FORCE=$(echo "--force-yes")
-#fi
-
-#echo "$FORCE"
-
-if [[ "$BRANCH" == "chip/next" ]]; then
+if [[ "$BRANCH" == "next" ]]; then
 
 apt-get -y --allow-unauthenticated install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
-                   avahi-daemon cu\
+                   avahi-daemon cu avahi-autoipd \
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
-                   bc gawk mtd-utils openssl ca-certificates \
+                   bc gawk mtd-utils-mlc openssl ca-certificates \
                    chip-power chip-hwtest curl chip-dt-overlays\
 || exit 1
 
@@ -88,30 +80,35 @@ else
 
 apt-get -y install network-manager fake-hwclock ntpdate openssh-server sudo hostapd bluez \
                    lshw stress i2c-tools \
-                   avahi-daemon cu\
+                   avahi-daemon cu avahi-autoipd \
                    flash-kernel \
                    alsa-utils htop \
                    binutils bzip2 ntp mlocate \
-                   bc gawk mtd-utils openssl ca-certificates \
+                   bc gawk mtd-utils-mlc openssl ca-certificates \
                    chip-power chip-hwtest curl chip-dt-overlays\
 || exit 1
 
 fi
+
+systemctl enable ubihealthd
 
 chmod u+s `which ping`
 
 #this is needs to be done after flash-kernel and before a kernel.deb is installed
 echo "NextThing C.H.I.P." > /etc/flash-kernel/machine
 
+KERNEL_VERSION_NUMBER="${KERNEL_VERSION_NUMBER:-4.4.11}"
 
-if [[ "$BRANCH" == "chip/next" ]]; then
-apt-get -y --allow-unauthenticated install linux-image-4.4.11 rtl8723bs-bt linux-firmware-image-4.4.11\
- rtl8723bs-mp-driver-common rtl8723bs-mp-driver-modules-4.4.11\
- chip-mali-modules
-else
-apt-get -y install linux-image-4.4.11 rtl8723bs-bt\
+if [[ "$BRANCH" == "next" ]]; then
+apt-get -y install --allow-unauthenticated --force-yes\
+  linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
-  rtl8723bs-mp-driver-modules-4.4.11
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER} chip-mali-modules
+else
+apt-get -y install\
+  linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
+  rtl8723bs-mp-driver-common\
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 fi
 
 
@@ -208,7 +205,7 @@ ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target
 rm /bin/sh
 ln -s /bin/bash /bin/sh
 
-if [[ "$BRANCH" == "chip/next" ]]; then
+if [[ "$BRANCH" == "next" ]]; then
   echo "SERVER-NEXT" > /etc/os-variant
 else
   echo "SERVER" > /etc/os-variant
