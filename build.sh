@@ -102,8 +102,8 @@ apt-get -y install --allow-unauthenticated --force-yes\
   linux-image-${KERNEL_VERSION_NUMBER\
   chip-mali-modules-${KERNEL_VERSION_NUMBER}
 
-  #rtl8723bs-bt\
-  #rtl8723bs-mp-driver-common\
+  #rtl8723bs-bt
+  #rtl8723bs-mp-driver-common
   #rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 else
 apt-get -y install\
