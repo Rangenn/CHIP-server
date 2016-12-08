@@ -102,16 +102,17 @@ KERNEL_VERSION_NUMBER="${KERNEL_VERSION_NUMBER:-4.4.11}"
 if [[ "$BRANCH" == "next" ]]; then
 apt-get -y install --allow-unauthenticated --force-yes\
   linux-image-${KERNEL_VERSION_NUMBER}\
-  chip-mali-modules-${KERNEL_VERSION_NUMBER}
-
-  #rtl8723bs-bt
-  #rtl8723bs-mp-driver-common
-  #rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
+  chip-mali-modules-${KERNEL_VERSION_NUMBER}\
+  rtl8723bs-bt\
+  rtl8723bs-mp-driver-common\
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 else
 apt-get -y install\
-  linux-image-${KERNEL_VERSION_NUMBER} rtl8723bs-bt\
+  linux-image-${KERNEL_VERSION_NUMBER}\
+  chip-mali-modules-${KERNEL_VERSION_NUMBER}\
+  rtl8723bs-bt\
   rtl8723bs-mp-driver-common\
-  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER} chip-mali-modules-${KERNEL_VERSION_NUMBER}
+  rtl8723bs-mp-driver-modules-${KERNEL_VERSION_NUMBER}
 fi
 
 
@@ -200,9 +201,11 @@ alsactl restore
 sed -s -i 's/#EXTRA_GROUPS="/EXTRA_GROUPS="netdev dip adm lp input /' /etc/adduser.conf
 sed -s -i 's/#ADD_EXTRA_GROUPS=/ADD_EXTRA_GROUPS=/' /etc/adduser.conf
 
-# Load g_serial driver and enable getty on it
-echo -e "\n# Virtual USB serial gadget\nttyGS0\n\n" >>/etc/securetty
-ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants/serial-getty@ttyGS0.service
+if [[ "$BRANCH" == "stable" ]]; then
+  # Load g_serial driver and enable getty on it
+  echo -e "\n# Virtual USB serial gadget\nttyGS0\n\n" >>/etc/securetty
+  ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants/serial-getty@ttyGS0.service
+fi
 
 # quick and dirty solution since hwtest doesn't like dash:
 rm /bin/sh
