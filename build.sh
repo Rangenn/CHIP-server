@@ -201,12 +201,10 @@ alsactl restore
 sed -s -i 's/#EXTRA_GROUPS="/EXTRA_GROUPS="netdev dip adm lp input /' /etc/adduser.conf
 sed -s -i 's/#ADD_EXTRA_GROUPS=/ADD_EXTRA_GROUPS=/' /etc/adduser.conf
 
-  # Load g_serial driver and enable getty on it
-  echo -e "\n# Virtual USB serial gadget\nttyGS0\n\n" >>/etc/securetty
-if [[ "$BRANCH" == "next" ]]; then
-  sed -i 's/After=rc-local.service/#After=rc-local.service/' /lib/systemd/system/serial-getty@.service
-fi
-  ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants/serial-getty@ttyGS0.service
+# Load g_serial driver and enable getty on it
+echo -e "\n# Virtual USB serial gadget\nttyGS0\n\n" >>/etc/securetty
+sed -i 's/After=rc-local.service/#After=rc-local.service/' /lib/systemd/system/serial-getty@.service
+ln -s /lib/systemd/system/serial-getty@.service /etc/systemd/system/getty.target.wants/serial-getty@ttyGS0.service
 
 # quick and dirty solution since hwtest doesn't like dash:
 rm /bin/sh
