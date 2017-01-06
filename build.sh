@@ -4,7 +4,8 @@ set -ex
 
 function setup {
 	sudo rm -rf rootfs*
-	wget http://opensource.nextthing.co/chippian/rootfs/rootfs.tar.gz
+	DEBOOTSTRAP_BUILD_NUM=$(curl http://opensource.nextthing.co/artifacts-travis/armhf-debootstrap/latest)
+	wget http://opensource.nextthing.co/artifacts-travis/armhf-debootstrap/${DEBOOTSTRAP_BUILD_NUM}/rootfs.tar.gz
 	sudo tar -xf rootfs.tar.gz
 }
 

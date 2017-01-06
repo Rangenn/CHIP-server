@@ -1,0 +1,61 @@
+language: c
+
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: required
+
+addons:
+  apt:
+    packages:
+      - qemu-user-static
+      - git
+
+before_script:
+  - mkdir -p upload/chip-stable/${TRAVIS_BUILD_NUMBER}
+  - mkdir -p upload/chip-stable-preserver/${TRAVIS_BUILD_NUMBER}
+  - mkdir -p upload/chip-staging/${TRAVIS_BUILD_NUMBER}
+  - mkdir -p upload/chip-staging-preserver/${TRAVIS_BUILD_NUMBER}
+
+  - echo ${TRAVIS_BUILD_NUMBER} > upload/chip-stable/latest
+  - echo ${TRAVIS_BUILD_NUMBER} > upload/chip-stable-preserver/latest
+  - echo ${TRAVIS_BUILD_NUMBER} > upload/chip-staging/latest
+  - echo ${TRAVIS_BUILD_NUMBER} > upload/chip-staging-preserver/latest
+
+  - git clone https://github.com/nextthingco/chip-postchroot
+  - cp chip-postchroot/build.sh postchroot.sh
+
+script:
+  - export BRANCH="stable"
+  - export KERNEL_VERSION_NUMBER="4.4.13-ntc-mlc"
+  - "./build.sh"
+  - cp server-rootfs.tar.gz upload/chip-stable-preserver/${TRAVIS_BUILD_NUMBER}/preserver-rootfs.tar.gz
+
+  - "./postchroot.sh"
+  - cp postchroot-rootfs.tar.gz upload/chip-stable/${TRAVIS_BUILD_NUMBER}/server-rootfs.tar
+
+  - rm server-rootfs.tar.gz
+  - rm postchroot-rootfs.tar.gz
+
+
+  - export BRANCH="next"
+  - export KERNEL_VERSION_NUMBER="4.4.13-ntc-mlc"
+  - "./build.sh"
+  - cp server-rootfs.tar.gz upload/chip-staging-preserver/${TRAVIS_BUILD_NUMBER}/preserver-rootfs.tar.gz
+
+  - "./postchroot.sh"
+  - cp postchroot-rootfs.tar.gz upload/chip-staging/${TRAVIS_BUILD_NUMBER}/server-rootfs.tar
+
+deploy:
+  on:
+    branch: chip/stable
+  provider: s3
+  access_key_id: "${AWS_ID}"
+  secret_access_key: "${AWS_SECRET}"
+  bucket: "opensource.nextthing.co"
+  skip_cleanup: true
+  acl: public_read
+  region: us-west-2
+  local-dir: upload
+  upload-dir: artifacts-travis
