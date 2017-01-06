@@ -51,8 +51,8 @@ deploy:
   on:
     branch: chip/stable
   provider: s3
-  access_key_id: "${AWS_ID}"
-  secret_access_key: "${AWS_SECRET}"
+  access_key_id: "${AWS_ACCESS_KEY_ID}"
+  secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
   bucket: "opensource.nextthing.co"
   skip_cleanup: true
   acl: public_read
