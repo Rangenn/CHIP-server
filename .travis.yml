@@ -35,8 +35,8 @@ script:
   - "./postchroot.sh"
   - cp postchroot-rootfs.tar.gz upload/chip-stable/${TRAVIS_BUILD_NUMBER}/server-rootfs.tar
 
-  - rm server-rootfs.tar.gz
-  - rm postchroot-rootfs.tar.gz
+  - rm -rf server-rootfs.tar.gz
+  - rm -rf postchroot-rootfs.tar.gz
 
 
   - export BRANCH="next"
