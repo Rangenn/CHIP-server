@@ -214,7 +214,6 @@ else
   echo "SERVER" > /etc/os-variant
 fi
 
-curl -sSL https://get.docker.com | sh
 
 EOF
 
